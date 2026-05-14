@@ -51,9 +51,6 @@ class Tree(Plant):
 	def	__init__(self, name: str, height: float, age_tree: int, trunk_diameter: float):
 		super().__init__(name, height, age_tree)
 		self.trunk_diameter = trunk_diameter
-		self.__age_counter = 0
-		self.__show_counter = 0
-		self.__grow_counter = 0
 		self.__shadow_counter = 0
 	def	produce_shade(self) -> None:
 		print(f"Tree {self.name} now produces a shade of {round(self.cm, 1)}cm long and {round(self.trunk_diameter, 1)}cm wide.")
@@ -61,7 +58,6 @@ class Tree(Plant):
 	def	show_tree(self) -> None:
 		self.show()
 		print(f"Trunk Diameter: {self.trunk_diameter}cm")
-		self.__show_counter += 1
 	def show_stats_tree (self) -> None:
 		self.show_stats()
 		print(f" {self.__shadow_counter} shadow")
