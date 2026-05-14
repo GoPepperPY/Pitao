@@ -10,11 +10,16 @@ class Flower(Plant):
 	def __init__(self, name: str, height: float, age_flower: int, color: str) -> None:
 		super().__init__(name, height, age_flower)
 		self.color: str = color
+		self.__bloom_value = False
 	def	bloom(self) -> None:
-		print(f"{self.name} is blooming beautifully!")
+		self.__bloom_value = True
 	def	show(self) -> None:
-		print(	f"{self.name}: {round(self.cm, 1)}cm, {self.age_plant} days old "
-				f"Color: {self.color}\n")
+		print(	f"{self.name}: {round(self.cm, 1)}cm, {self.age_plant} days old\n"
+				f"Color: {self.color}")
+		if self.__bloom_value == True:
+			print(f"{self.name} is blooming beautifully!")
+		else :
+			print(f"{self.name} has not bloomed yet")
 
 class Tree(Plant):
 	def	__init__(self, name: str, height: float, age_tree: int, trunk_diameter: float):
@@ -62,8 +67,10 @@ def main() -> None:
 
 	"""<------ Flowers ------>"""
 	for	plant in flower_data:
+		plant.show()
 		plant.bloom()
 		plant.show()
+		print("\n")
 
 	"""<------ Trees ------>"""
 	for	plant in tree_data:
