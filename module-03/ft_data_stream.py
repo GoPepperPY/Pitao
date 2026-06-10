@@ -13,7 +13,8 @@ def	gen_event() -> typing.Generator:
     ]
 	pool_event = [
 		'Sleep', 'Climb', 'Cook', 'Eat',
-		'Love', 'Swim', 'Drawn', 'Jerk Off'
+		'Love', 'Swim', 'Drawn', 'Drink', 'Jerk Off',
+		'Fly'
 	]
 	while True:
 		yield (random.choice(pool_names), random.choice(pool_event))
@@ -26,6 +27,12 @@ def main() -> None:
 	random_list: list[tuple[str, str]] = []
 	for x in range(0, 10):
 		random_list.append(next(gen))
-	print(f"Built list of 10 event: {random_list}")
+	print(f"Built list of {len(random_list)} event: {random_list}")
+	while len(random_list) > 0:
+		number = random.randint(0, len(random_list) - 1)
+		print(f"Got event from list: {random_list[number]}")
+		random_list.pop(number)
+		print(f"Remains in list: {random_list}")
+
 if __name__ == "__main__":
 	main()
