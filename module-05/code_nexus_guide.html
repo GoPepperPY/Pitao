@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Code Nexus — Understanding the Subject</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0e1a;
+    --bg2:#0c1220;
+    --panel:#131a2e;
+    --panel2:#171f37;
+    --line:rgba(148,163,210,.16);
+    --line-strong:rgba(148,163,210,.32);
+    --ink:#e7ecf7;
+    --muted:#94a1c0;
+    --faint:#6c7896;
+    --violet:#a78bfa;   /* the Nexus */
+    --cyan:#2dd4bf;     /* Numeric */
+    --pink:#f472b6;     /* Text */
+    --amber:#fbbf24;    /* Log */
+    --red:#fb7185;
+    --green:#4ade80;
+    --disp:"Chakra Petch",system-ui,sans-serif;
+    --body:"IBM Plex Sans",system-ui,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,monospace;
+    --maxw:920px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:var(--body);font-size:16.5px;line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      radial-gradient(900px 600px at 78% -8%,rgba(167,124,250,.12),transparent 60%),
+      radial-gradient(700px 500px at -5% 12%,rgba(45,212,191,.08),transparent 55%);
+  }
+  a{color:var(--cyan);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  /* ---------- layout ---------- */
+  .shell{display:grid;grid-template-columns:260px 1fr;gap:0;max-width:1240px;margin:0 auto}
+  nav.side{
+    position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;
+    padding:34px 22px 60px;border-right:1px solid var(--line);
+  }
+  .brand{font-family:var(--disp);font-weight:700;letter-spacing:.5px;font-size:1.05rem;color:var(--ink);line-height:1.2}
+  .brand span{color:var(--violet)}
+  .brand small{display:block;font-family:var(--mono);font-weight:400;font-size:.62rem;letter-spacing:2px;color:var(--faint);margin-top:6px;text-transform:uppercase}
+  nav.side ol{list-style:none;margin:30px 0 0;padding:0;counter-reset:n}
+  nav.side a.nl{
+    display:block;padding:7px 10px;border-radius:8px;color:var(--muted);
+    font-size:.86rem;border-left:2px solid transparent;
+  }
+  nav.side a.nl:hover{color:var(--ink);background:rgba(148,163,210,.06);text-decoration:none}
+  nav.side a.nl.head{margin-top:16px;font-family:var(--mono);font-size:.64rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--faint);padding-left:10px;pointer-events:none}
+  nav.side a.nl .k{font-family:var(--mono);color:var(--faint);margin-right:8px;font-size:.78rem}
+
+  main{min-width:0;padding:0 6vw 120px}
+  section{max-width:var(--maxw);margin:0 auto;padding:54px 0 8px;border-top:1px solid var(--line)}
+  section:first-of-type{border-top:none}
+
+  /* ---------- type ---------- */
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(2.1rem,5vw,3.3rem);line-height:1.04;margin:.2em 0 .35em;letter-spacing:-.5px}
+  h2{font-family:var(--disp);font-weight:600;font-size:clamp(1.5rem,3.2vw,2rem);margin:.2em 0 .5em;letter-spacing:-.2px}
+  h3{font-family:var(--disp);font-weight:600;font-size:1.2rem;margin:1.6em 0 .4em;color:var(--ink)}
+  h4{font-family:var(--mono);font-weight:500;font-size:.82rem;letter-spacing:1px;text-transform:uppercase;color:var(--violet);margin:1.4em 0 .3em}
+  p{margin:.7em 0;color:#d7deee}
+  .lead{font-size:1.12rem;color:var(--muted)}
+  strong{color:#fff;font-weight:600}
+  em{color:var(--ink);font-style:normal;border-bottom:1px dotted var(--line-strong)}
+  .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--faint);margin-bottom:14px}
+  ul,ol.steps{padding-left:1.2em}
+  li{margin:.4em 0;color:#d7deee}
+  code{font-family:var(--mono);font-size:.86em;background:rgba(148,163,210,.12);padding:.12em .4em;border-radius:5px;color:#bfe9e2}
+
+  /* ---------- hero ---------- */
+  .hero{border-top:none;padding-top:46px}
+  .hero .badge{display:inline-flex;gap:8px;align-items:center;font-family:var(--mono);font-size:.7rem;letter-spacing:2px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 14px}
+  .hero .badge b{color:var(--violet)}
+  .router{
+    position:relative;margin:34px 0 8px;height:230px;border:1px solid var(--line);border-radius:16px;overflow:hidden;
+    background:linear-gradient(180deg,rgba(167,124,250,.06),transparent 40%),var(--bg2);
+  }
+  .router .nexus{
+    position:absolute;left:50%;top:24px;transform:translateX(-50%);
+    font-family:var(--disp);font-weight:700;letter-spacing:2px;font-size:.82rem;color:var(--violet);
+    border:1px solid rgba(167,124,250,.45);border-radius:8px;padding:8px 16px;background:rgba(167,124,250,.08);
+    box-shadow:0 0 30px rgba(167,124,250,.25);z-index:3;
+  }
+  .router .lanes{position:absolute;inset:78px 0 0;display:grid;grid-template-columns:repeat(3,1fr)}
+  .router .lane{position:relative;border-left:1px solid var(--line)}
+  .router .lane:first-child{border-left:none}
+  .router .lane .tag{position:absolute;bottom:12px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:.66rem;letter-spacing:1px;color:var(--faint)}
+  .router .lane .tag b{display:block;font-size:.74rem;margin-bottom:2px}
+  .ln-num .tag b{color:var(--cyan)} .ln-txt .tag b{color:var(--pink)} .ln-log .tag b{color:var(--amber)}
+  .tok{position:absolute;left:50%;font-family:var(--mono);font-size:.7rem;padding:2px 8px;border-radius:6px;white-space:nowrap;transform:translateX(-50%);opacity:0}
+  .tok.n{color:var(--cyan);border:1px solid rgba(45,212,191,.4);background:rgba(45,212,191,.08)}
+  .tok.t{color:var(--pink);border:1px solid rgba(244,114,182,.4);background:rgba(244,114,182,.08)}
+  .tok.l{color:var(--amber);border:1px solid rgba(251,191,36,.4);background:rgba(251,191,36,.08)}
+  @keyframes drop{
+    0%{top:-26px;opacity:0}
+    12%{opacity:1}
+    50%{top:96px;opacity:1}
+    88%{opacity:1}
+    100%{top:190px;opacity:0}
+  }
+  .tok.a1{animation:drop 5.5s linear infinite}
+  .tok.a2{animation:drop 5.5s linear infinite 1.8s}
+  .tok.a3{animation:drop 5.5s linear infinite 3.4s}
+  .lane-x{left:16.66%} .lane-y{left:50%} .lane-z{left:83.33%}
+
+  /* ---------- components ---------- */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+  .card h3{margin-top:0}
+  .card .pill{font-family:var(--mono);font-size:.66rem;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border-radius:999px;display:inline-block;margin-bottom:10px}
+  .pill.num{color:var(--cyan);background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3)}
+  .pill.txt{color:var(--pink);background:rgba(244,114,182,.1);border:1px solid rgba(244,114,182,.3)}
+  .pill.log{color:var(--amber);background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3)}
+
+  pre{background:#070b15;border:1px solid var(--line);border-radius:12px;padding:16px 18px;overflow-x:auto;font-family:var(--mono);font-size:.82rem;line-height:1.6;color:#cdd6ec;margin:14px 0}
+  pre .c{color:var(--faint)}    /* comment */
+  pre .k{color:var(--violet)}   /* keyword */
+  pre .s{color:#7ee0c9}         /* string */
+  pre .f{color:var(--amber)}    /* func/name */
+  pre .t{color:var(--pink)}     /* type */
+  .codecap{font-family:var(--mono);font-size:.68rem;letter-spacing:1px;color:var(--faint);text-transform:uppercase;margin:-4px 0 0}
+
+  .callout{border-radius:12px;padding:16px 20px;margin:20px 0;border:1px solid var(--line);background:var(--panel2)}
+  .callout .lbl{font-family:var(--mono);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;display:block}
+  .callout.tip{border-color:rgba(74,222,128,.3)} .callout.tip .lbl{color:var(--green)}
+  .callout.warn{border-color:rgba(251,191,36,.35)} .callout.warn .lbl{color:var(--amber)}
+  .callout.key{border-color:rgba(167,124,250,.4);background:linear-gradient(180deg,rgba(167,124,250,.08),transparent)} .callout.key .lbl{color:var(--violet)}
+  .callout.q{border-color:rgba(45,212,191,.35)} .callout.q .lbl{color:var(--cyan)}
+
+  .gb{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  .gb > div{border-radius:12px;padding:14px 18px;font-size:.92rem}
+  .gb .good{border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.05)}
+  .gb .bad{border:1px solid rgba(251,113,133,.3);background:rgba(251,113,133,.05)}
+  .gb h4{margin-top:0}
+  .gb .good h4{color:var(--green)} .gb .bad h4{color:var(--red)}
+
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:var(--mono);font-size:.68rem;letter-spacing:1px;text-transform:uppercase;color:var(--faint)}
+  td code{font-size:.82em}
+
+  .flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:18px 0;font-family:var(--mono);font-size:.8rem}
+  .flow .node{border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:var(--panel)}
+  .flow .arr{color:var(--faint)}
+
+  .qlist{list-style:none;padding:0;counter-reset:q}
+  .qlist li{counter-increment:q;padding:12px 0 12px 44px;position:relative;border-bottom:1px solid var(--line)}
+  .qlist li::before{content:"Q"counter(q);position:absolute;left:0;top:11px;font-family:var(--mono);font-size:.72rem;color:var(--violet);border:1px solid rgba(167,124,250,.35);border-radius:6px;padding:2px 6px}
+  .hint{display:block;color:var(--muted);font-size:.9rem;margin-top:4px}
+
+  footer{max-width:var(--maxw);margin:60px auto 0;padding-top:24px;border-top:1px solid var(--line);color:var(--faint);font-size:.82rem;font-family:var(--mono)}
+
+  .stack{display:flex;flex-direction:column;gap:2px;font-family:var(--mono);font-size:.78rem;margin:14px 0}
+  .stack .cell{border:1px solid var(--line);border-left:3px solid var(--cyan);padding:6px 12px;background:var(--panel);border-radius:6px}
+  .stack .cell.old{border-left-color:var(--green);color:var(--green)}
+  .stack .note{color:var(--faint);font-size:.72rem;margin-top:4px}
+
+  @media(max-width:880px){
+    .shell{grid-template-columns:1fr}
+    nav.side{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line);padding:22px 6vw}
+    nav.side ol{columns:2;margin-top:18px}
+    main{padding:0 6vw 90px}
+    .grid2,.grid3,.gb{grid-template-columns:1fr}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .tok{animation:none!important;opacity:1;top:96px}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+<nav class="side">
+  <div class="brand">CODE <span>NEXUS</span><small>Field Guide v3.0</small></div>
+  <ol>
+    <a class="nl head">Foundations</a>
+    <a class="nl" href="#mission"><span class="k">00</span>The mission</a>
+    <a class="nl" href="#bigidea"><span class="k">01</span>The big idea</a>
+    <a class="nl" href="#ai"><span class="k">02</span>Using AI honestly</a>
+    <a class="nl head">The OOP toolkit</a>
+    <a class="nl" href="#abc"><span class="k">03</span>Abstract classes &amp; ABC</a>
+    <a class="nl" href="#override"><span class="k">04</span>Overriding</a>
+    <a class="nl" href="#poly"><span class="k">05</span>Polymorphism</a>
+    <a class="nl" href="#types"><span class="k">06</span>Types &amp; the mypy trap</a>
+    <a class="nl" href="#duck"><span class="k">07</span>Duck typing &amp; Protocol</a>
+    <a class="nl" href="#rules"><span class="k">08</span>Constraints decoded</a>
+    <a class="nl head">The exercises</a>
+    <a class="nl" href="#ex0"><span class="k">09</span>Ex 0 · Data Processor</a>
+    <a class="nl" href="#ex1"><span class="k">10</span>Ex 1 · Data Stream</a>
+    <a class="nl" href="#ex2"><span class="k">11</span>Ex 2 · Data Pipeline</a>
+    <a class="nl head">Defense</a>
+    <a class="nl" href="#defense"><span class="k">12</span>Defense prep</a>
+  </ol>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<section class="hero" id="mission">
+  <span class="badge"><b>●</b> NEO-TOKYO · 2087 · STREAM ENGINEER</span>
+  <h1>One interface.<br>Many kinds of data.</h1>
+  <p class="lead">The whole project is a single sentence dressed in neon: <strong>build a system that can accept wildly different kinds of data through one common interface, route each piece to the right handler, and export the results — without the system ever needing to know the concrete type in advance.</strong> Everything else is the machinery that makes that possible.</p>
+
+  <div class="router" aria-hidden="true">
+    <div class="nexus">⬢ NEXUS · ROUTER</div>
+    <span class="tok n a1 lane-x">42</span>
+    <span class="tok t a2 lane-y">"Hello"</span>
+    <span class="tok l a3 lane-z">{log…}</span>
+    <span class="tok n a3 lane-y">3.14</span>
+    <span class="tok t a1 lane-z">"Nexus"</span>
+    <span class="tok l a2 lane-x">{ERROR…}</span>
+    <div class="lanes">
+      <div class="lane ln-num"><div class="tag"><b>NumericProcessor</b>int · float · lists</div></div>
+      <div class="lane ln-txt"><div class="tag"><b>TextProcessor</b>str · list[str]</div></div>
+      <div class="lane ln-log"><div class="tag"><b>LogProcessor</b>dict[str,str] · lists</div></div>
+    </div>
+  </div>
+  <p class="codecap">Tokens fall into the Nexus; polymorphism decides which lane each one belongs to.</p>
+
+  <p>This guide walks you through <em>every concept and every requirement</em> in the subject so you can write the code yourself and defend it. It deliberately gives <strong>no solution code</strong> — only the understanding you need to produce your own. The examples below use unrelated little worlds (shapes, sensors, animals) precisely so they teach the mechanism without doing your homework.</p>
+</section>
+
+<!-- BIG IDEA -->
+<section id="bigidea">
+  <div class="eyebrow">01 · The big idea</div>
+  <h2>Why this is hard, and what saves you</h2>
+  <p>Imagine you have to write code that processes numbers, text, and log entries. The naïve approach is a wall of <code>if isinstance(x, int): … elif isinstance(x, str): …</code> scattered through your program. Every time a new data type appears, you hunt down every one of those <code>if</code>-ladders and edit them. It is fragile and it does not scale.</p>
+  <p>Object-oriented design offers a different deal. You define <strong>one common interface</strong> — a promise that says "anything that processes data can be asked to <code>validate</code>, <code>ingest</code>, and <code>output</code>." Then each data type gets its own class that <em>keeps that promise in its own way</em>. The surrounding code only ever talks to the promise, never to the concrete class. Add a new data type later and the old code keeps working untouched.</p>
+  <div class="callout key"><span class="lbl">The thesis of the whole project</span>Code that depends on an <strong>interface</strong> instead of a <strong>concrete type</strong> can be extended without being rewritten. The three exercises are just three increasingly ambitious demonstrations of that single principle.</div>
+  <p>Four words name the techniques that make this work, and you will be asked about all four at the defense:</p>
+  <div class="grid2">
+    <div class="card"><h4>Abstract class</h4><p style="margin:0">A class that defines the promise (the method names + signatures) but refuses to be used directly. It is a contract, not a worker.</p></div>
+    <div class="card"><h4>Method overriding</h4><p style="margin:0">Each subclass supplies its own body for a promised method — same name, specialised behaviour.</p></div>
+    <div class="card"><h4>Inheritance</h4><p style="margin:0">Subclasses get the shared, already-written parts for free (here: <code>output</code>) and only write what differs.</p></div>
+    <div class="card"><h4>Polymorphism</h4><p style="margin:0">One variable, many possible concrete types. The right overridden method runs automatically at runtime.</p></div>
+  </div>
+</section>
+
+<!-- AI -->
+<section id="ai">
+  <div class="eyebrow">02 · Using AI honestly</div>
+  <h2>The subject is watching how you learn</h2>
+  <p>Chapter II of the subject is unusually direct: you may use AI, but you will be evaluated on <strong>understanding</strong>, not output. During the defense you can be asked to extend the system with a new data type or change behaviour on the spot. If you can't explain your own code, you fail — regardless of whether it runs.</p>
+  <div class="gb">
+    <div class="good"><h4>✓ How to use this page</h4>Read a concept, then close the page and re-implement it from memory in your own words and your own code. Walk the design through with a peer. If you can teach it, you own it.</div>
+    <div class="bad"><h4>✗ What sinks you</h4>Pasting generated classes you can't trace. "It compiles" is not "I understand." The grader will ask <em>why</em> the <code>ingest</code> signatures differ — have a real answer.</div>
+  </div>
+  <p>So as you go: pause at each <span style="color:var(--cyan)">QUESTION</span> box, try to answer it aloud before reading on, and keep a running list of anything you can't yet explain. That list is your study plan.</p>
+</section>
+
+<!-- ABC -->
+<section id="abc">
+  <div class="eyebrow">03 · The OOP toolkit</div>
+  <h2>Abstract classes &amp; the <code>ABC</code> module</h2>
+  <p>An <em>abstract class</em> is a base class that is intentionally incomplete. It declares which methods every subclass <strong>must</strong> have, but doesn't (necessarily) say how they work. You cannot create an instance of it directly — trying to do so is an error. That's the point: it exists only to be inherited from.</p>
+  <p>In Python this comes from the standard <code>abc</code> module (one of your two authorised imports). You inherit from <code>ABC</code> and mark the must-implement methods with the <code>@abstractmethod</code> decorator.</p>
+  <pre><span class="c"># illustrative ONLY — a different world, not the project</span>
+<span class="k">from</span> abc <span class="k">import</span> ABC, abstractmethod
+
+<span class="k">class</span> <span class="t">Sensor</span>(ABC):
+    <span class="f">@abstractmethod</span>
+    <span class="k">def</span> <span class="f">read</span>(self) -> <span class="t">float</span>:
+        <span class="c">"""Every sensor must know how to read. No body here."""</span>
+
+    <span class="k">def</span> <span class="f">label</span>(self) -> <span class="t">str</span>:
+        <span class="c"># a NORMAL (concrete) method: shared by all sensors</span>
+        <span class="k">return</span> <span class="s">"sensor reading"</span>
+
+s = Sensor()   <span class="c"># TypeError: can't instantiate abstract class</span></pre>
+  <p>Two things to notice, because the subject relies on both:</p>
+  <ul>
+    <li>An abstract class can mix <strong>abstract methods</strong> (a body-less promise each subclass must fulfil) with <strong>concrete methods</strong> (a finished method every subclass inherits as-is).</li>
+    <li>A subclass becomes usable only once it has overridden <em>every</em> abstract method. Miss one, and that subclass is itself still abstract and can't be instantiated.</li>
+  </ul>
+  <div class="callout warn"><span class="lbl">Map this onto Exercise 0</span><code>DataProcessor</code> is the abstract class. <code>validate</code> and <code>ingest</code> are the two abstract methods (promises). <code>output</code> is the one concrete method (written once, inherited by all three processors). The three processors are the subclasses that fulfil the promises.</div>
+</section>
+
+<!-- OVERRIDE -->
+<section id="override">
+  <div class="eyebrow">04 · The OOP toolkit</div>
+  <h2>Method overriding</h2>
+  <p>Overriding means a subclass defines a method with the <strong>same name</strong> as one in its parent, replacing the parent's version for instances of that subclass. The parent says <em>what</em>; each child decides <em>how</em>.</p>
+  <pre><span class="c"># illustrative ONLY</span>
+<span class="k">class</span> <span class="t">Thermometer</span>(Sensor):
+    <span class="k">def</span> <span class="f">read</span>(self) -> <span class="t">float</span>:        <span class="c"># overrides Sensor.read</span>
+        <span class="k">return</span> <span class="s">21.4</span>
+
+<span class="k">class</span> <span class="t">Barometer</span>(Sensor):
+    <span class="k">def</span> <span class="f">read</span>(self) -> <span class="t">float</span>:        <span class="c"># overrides it differently</span>
+        <span class="k">return</span> <span class="s">1013.2</span></pre>
+  <p>The same method name, two completely different bodies. When you later call <code>x.read()</code>, Python looks at the <em>actual</em> object behind <code>x</code> and runs <em>its</em> version. You'll override <code>validate</code> and <code>ingest</code> three times each — once per processor — and each override encodes what "valid data" and "ingest this" mean for that specific type.</p>
+  <div class="callout tip"><span class="lbl">Inheritance = code reuse</span>Because <code>output</code> is written once in the base class and never overridden, all three processors share it for free. That's the "code reuse" the defense note asks you to articulate: write the common part once, specialise only what differs.</div>
+</section>
+
+<!-- POLY -->
+<section id="poly">
+  <div class="eyebrow">05 · The OOP toolkit</div>
+  <h2>Subtype polymorphism</h2>
+  <p>"Poly-morphism" = "many forms." A single variable typed as the base class can, at runtime, hold any subclass instance — and calling a method on it runs the correct overridden version automatically. You write the loop <strong>once</strong>, against the base type, and it works for every present and future subclass.</p>
+  <pre><span class="c"># illustrative ONLY</span>
+sensors: <span class="t">list</span>[<span class="t">Sensor</span>] = [Thermometer(), Barometer()]
+<span class="k">for</span> sensor <span class="k">in</span> sensors:
+    print(sensor.read())   <span class="c"># 21.4 then 1013.2 — no isinstance, no if-ladder</span></pre>
+  <p>Notice what's <em>missing</em>: no <code>if isinstance(...)</code>, no type checks. The loop doesn't know or care which concrete sensor it's holding. That is the heart of Exercise 1's <code>DataStream</code>: it keeps a list of <code>DataProcessor</code> objects and asks each one, polymorphically, whether it can handle a piece of data — never branching on concrete type.</p>
+  <div class="callout q"><span class="lbl">Question — answer before continuing</span>The subject's own reflection question: <em>how does polymorphism let <code>DataStream</code> handle different data types without knowing their implementations?</em> Try it, then expand the hint.
+  <details style="margin-top:10px"><summary style="cursor:pointer;color:var(--cyan)">Show the shape of a good answer</summary><p style="margin:.6em 0 0">Because <code>DataStream</code> only depends on the <strong>base interface</strong> (<code>validate</code>/<code>ingest</code>), it can call those methods on any object that <em>is-a</em> <code>DataProcessor</code>. Python dispatches to each object's own overridden method at runtime. Benefits: the stream code never changes when you add a processor (open for extension, closed for modification); no brittle type-checking ladder; each type's rules live in one place. Say it in your words — don't memorise this.</p></details></div>
+</section>
+
+<!-- TYPES -->
+<section id="types">
+  <div class="eyebrow">06 · The OOP toolkit</div>
+  <h2>Type annotations &amp; the deliberate <code>mypy</code> warning</h2>
+  <p>Your other authorised import is <code>typing</code>. Every method needs full type annotations, checked with <code>mypy</code>. Most of this is routine — until you hit the subtle bit the subject builds an entire requirement around. Read this section twice; it is the single most asked-about idea at the defense.</p>
+
+  <h3>The two signatures that look contradictory</h3>
+  <table>
+    <tr><th>Method</th><th>Base class signature</th><th>In the subclasses</th></tr>
+    <tr><td><code>validate</code></td><td><code>validate(self, data: Any) -&gt; bool</code></td><td><strong>Same</strong> signature, unchanged</td></tr>
+    <tr><td><code>ingest</code></td><td><code>ingest(self, data: Any) -&gt; None</code></td><td><strong>Narrowed</strong> to the types it accepts</td></tr>
+  </table>
+  <p>Why the difference? <code>validate</code>'s job is to be handed <em>anything at all</em> and answer "can I deal with this?" So it must keep accepting <code>Any</code> in every subclass — it can't refuse a type before inspecting it. <code>ingest</code> is different: the subject explicitly wants each processor's <code>ingest</code> to advertise the concrete types it expects (e.g. the numeric one's parameter is annotated for ints/floats and lists of them), so the signature documents the contract.</p>
+
+  <h3>Why that triggers a warning — and why it's correct here</h3>
+  <p>There is a design rule called the <em>Liskov Substitution Principle</em>: a subclass should be usable anywhere the base class is. For method parameters, that means an override may safely accept <strong>more</strong> types than the parent (widen), but <strong>not fewer</strong> (narrow). Narrowing breaks substitutability — someone holding the base type believes they can pass <code>Any</code>, but the subclass secretly rejects most of it.</p>
+  <pre><span class="c"># illustrative ONLY — the same shape as the trap</span>
+<span class="k">class</span> <span class="t">Animal</span>:
+    <span class="k">def</span> <span class="f">feed</span>(self, food: <span class="t">Any</span>) -> <span class="t">None</span>: ...
+
+<span class="k">class</span> <span class="t">Cat</span>(Animal):
+    <span class="k">def</span> <span class="f">feed</span>(self, food: <span class="t">Fish</span>) -> <span class="t">None</span>: ...   <span class="c"># narrower param</span>
+<span class="c"># mypy: "Argument 1 ... incompatible with supertype" — by design here</span></pre>
+  <div class="callout warn"><span class="lbl">The subject ASKS for this warning</span>Exercise 0 says testing <code>ingest</code> with invalid data and no prior <code>validate</code> "will leave you with a mypy warning, on purpose." That warning is the visible symptom of narrowing <code>ingest</code>'s parameter type. You are <strong>meant</strong> to see it — it proves you understood the contract well enough to deliberately step outside it. At the defense, be ready to explain exactly this: <em>narrowing a parameter type violates Liskov substitution, which is why a static checker flags it.</em></div>
+  <p>The intended runtime safety net is separate from the type checker: if someone skips <code>validate</code> and feeds garbage straight into <code>ingest</code>, your code should <strong>raise an exception</strong> rather than silently corrupt the stream. (The example shows <code>Got exception: Improper numeric data</code>.) Static typing documents intent; the exception enforces it at runtime.</p>
+
+  <h3>The <code>output</code> return type</h3>
+  <p><code>output(self) -&gt; tuple[int, str]</code> hands back two things together: an <strong>int</strong> (a processing rank / position) and a <strong>str</strong> (the data, already turned into text). Same shape for every processor, so downstream code can treat all outputs identically — another payoff of the shared interface.</p>
+</section>
+
+<!-- DUCK -->
+<section id="duck">
+  <div class="eyebrow">07 · The OOP toolkit</div>
+  <h2>Duck typing &amp; <code>Protocol</code></h2>
+  <p>Exercise 2 introduces a second, looser way to define an interface. The phrase is "if it walks like a duck and quacks like a duck, it's a duck" — <em>duck typing</em> cares about what an object can <strong>do</strong>, not what it <strong>inherits from</strong>.</p>
+  <table>
+    <tr><th></th><th>ABC (nominal)</th><th>Protocol (structural)</th></tr>
+    <tr><td>Compatibility decided by</td><td>Inheritance: you must subclass it</td><td>Shape: you just need the right methods</td></tr>
+    <tr><td>Used in</td><td>Ex 0 — <code>DataProcessor</code></td><td>Ex 2 — <code>ExportPlugin</code></td></tr>
+    <tr><td>Mental model</td><td>"You signed the contract"</td><td>"You happen to fit the mould"</td></tr>
+  </table>
+  <p>A <code>Protocol</code> (from <code>typing</code>) defines a method shape that any class can satisfy <em>without explicitly inheriting from it</em>. As long as a class has a <code>process_output(self, data: list[tuple[int, str]]) -&gt; None</code> method, it counts as an <code>ExportPlugin</code> — whether it's the CSV plugin, the JSON plugin, or one you write tomorrow.</p>
+  <pre><span class="c"># illustrative ONLY</span>
+<span class="k">from</span> typing <span class="k">import</span> Protocol
+
+<span class="k">class</span> <span class="t">Renderer</span>(Protocol):
+    <span class="k">def</span> <span class="f">render</span>(self, text: <span class="t">str</span>) -> <span class="t">None</span>: ...
+
+<span class="k">class</span> <span class="t">ConsoleRenderer</span>:        <span class="c"># note: does NOT inherit Renderer</span>
+    <span class="k">def</span> <span class="f">render</span>(self, text: <span class="t">str</span>) -> <span class="t">None</span>:
+        print(text)               <span class="c"># yet it counts as a Renderer</span></pre>
+  <div class="callout key"><span class="lbl">Why two interface styles in one project?</span>It's a teaching contrast. ABC gives you a strict family tree where reuse and overriding live. Protocol gives you a plug-in port where unrelated classes can dock just by matching a method shape. Knowing <em>when</em> to reach for each is exactly what the defense is probing.</div>
+</section>
+
+<!-- RULES -->
+<section id="rules">
+  <div class="eyebrow">08 · The OOP toolkit</div>
+  <h2>The general constraints, decoded</h2>
+  <table>
+    <tr><th>Constraint</th><th>What it really means for you</th></tr>
+    <tr><td>Python 3.10+</td><td>You can use modern syntax like <code>tuple[int, str]</code>, <code>list[str]</code>, and <code>X | Y</code> unions directly — no need for <code>typing.List</code> etc.</td></tr>
+    <tr><td>flake8</td><td>Style police: line length, spacing, unused imports, blank lines. Run it before you submit; fix every complaint.</td></tr>
+    <tr><td>Full type annotations + mypy</td><td>Every parameter and return value is typed. <code>mypy</code> must be clean — except the one warning the subject deliberately wants (see §06).</td></tr>
+    <tr><td>Exception handling protects the stream</td><td>Bad data must never silently corrupt state. Validate first; if someone ingests unvalidated garbage, raise. Catch where the subject expects graceful handling (e.g. a stream element no processor accepts → print an error, keep going).</td></tr>
+    <tr><td>Imports: only <code>abc</code> and <code>typing</code></td><td>No <code>json</code>, no <code>csv</code> module. Exercise 2 explicitly says build the CSV/JSON strings <strong>by hand</strong>. That's intentional — it tests whether you understand the formats, not whether you can call a library.</td></tr>
+    <tr><td>Standard types &amp; builtins allowed</td><td><code>list</code>, <code>dict</code>, <code>str</code>, <code>isinstance</code>, etc. are all fair game.</td></tr>
+  </table>
+</section>
+
+<!-- EX0 -->
+<section id="ex0">
+  <div class="eyebrow">09 · Exercise 0 — <code>ex0/data_processor.py</code></div>
+  <h2>Build the foundation: one base, three workers</h2>
+  <p>This is where the entire architecture is born. You are building the abstract base plus three concrete processors. Nothing routes data yet — that's Ex 1. Here you just prove each processor can validate, ingest, and output on its own.</p>
+
+  <h3>The architecture you must produce</h3>
+  <div class="flow">
+    <span class="node" style="border-color:rgba(167,124,250,.4);color:var(--violet)">DataProcessor (ABC)</span>
+    <span class="arr">└─ is inherited by ─►</span>
+    <span class="node" style="border-color:rgba(45,212,191,.4);color:var(--cyan)">NumericProcessor</span>
+    <span class="node" style="border-color:rgba(244,114,182,.4);color:var(--pink)">TextProcessor</span>
+    <span class="node" style="border-color:rgba(251,191,36,.4);color:var(--amber)">LogProcessor</span>
+  </div>
+
+  <h3>The three methods on the base</h3>
+  <table>
+    <tr><th>Method</th><th>Kind</th><th>Responsibility</th></tr>
+    <tr><td><code>validate(self, data: Any) -&gt; bool</code></td><td>abstract</td><td>"Can I handle this?" Accepts anything, returns yes/no. Same signature in all subclasses.</td></tr>
+    <tr><td><code>ingest(self, data: Any) -&gt; None</code></td><td>abstract</td><td>Accept and store the data. Subclass signatures narrow to their real types. Raise if handed invalid data.</td></tr>
+    <tr><td><code>output(self) -&gt; tuple[int, str]</code></td><td>concrete</td><td>Hand back the oldest stored item + its rank, and remove it. Written once, inherited by all.</td></tr>
+  </table>
+
+  <h3>What each processor accepts</h3>
+  <div class="grid3">
+    <div class="card"><span class="pill num">Numeric</span><p style="margin:0">Ingests <code>int</code>, <code>float</code>, and lists mixing both. Converts each value <strong>to a string</strong> before storing.</p></div>
+    <div class="card"><span class="pill txt">Text</span><p style="margin:0">Ingests <code>str</code> and lists of strings. Stores them as-is (already text).</p></div>
+    <div class="card"><span class="pill log">Log</span><p style="margin:0">Ingests <code>dict</code> of string→string, and lists of such dicts. Converts each to a string like <code>LEVEL: message</code>.</p></div>
+  </div>
+
+  <h3>"Oldest item + rank" — what storage shape does that imply?</h3>
+  <p>The <code>output</code> method must return the <strong>oldest</strong> piece of data and then remove it. "Oldest out first" is the definition of a <strong>FIFO queue</strong>. A plain Python <code>list</code> works fine: append on ingest, take from the front on output. The "processing rank" is a counter of how many items this processor has ever accepted — it's the position/order, which is why outputs in the examples are numbered <code>0, 1, 2…</code></p>
+  <div class="stack">
+    <div class="cell old">oldest  ·  rank 0  ·  ► leaves first on output()</div>
+    <div class="cell">rank 1</div>
+    <div class="cell">rank 2</div>
+    <div class="cell">newest  ·  rank 3  ·  ◄ arrived last via ingest()</div>
+    <div class="note">A FIFO queue. output() pulls from the top (oldest); ingest() pushes to the bottom (newest).</div>
+  </div>
+  <div class="callout warn"><span class="lbl">Decide for yourself, then justify it</span>Should the rank reset, or keep climbing across the processor's whole life? Look closely at how the example numbers items in Ex 1/Ex 2 (it keeps a <em>total processed</em> count separate from <em>remaining</em>). Reverse-engineer the intended behaviour from the expected output — that skill of reading sample output as a spec is itself being tested.</div>
+
+  <h3>The required tests (bottom of the example output)</h3>
+  <ol class="steps">
+    <li>Instantiate each of the three processors.</li>
+    <li>Call <code>validate</code> with both good and bad data for each, and print the boolean.</li>
+    <li>Call <code>ingest</code> with bad data <em>without validating first</em> and confirm it raises (this is the line that produces the intentional mypy warning).</li>
+    <li>Ingest several valid items, then pull them back with <code>output</code>, printing each.</li>
+  </ol>
+  <div class="callout q"><span class="lbl">Question</span>The expected output shows <code>validate('42'): True</code> for the numeric processor but <code>validate('42'): False</code> for the text processor. What does that tell you about whether <code>validate</code> looks at the value's <em>type</em> or its <em>content</em>? (Hint: <code>42</code> there is shown as the integer the program holds, and each processor judges by type.)</div>
+</section>
+
+<!-- EX1 -->
+<section id="ex1">
+  <div class="eyebrow">10 · Exercise 1 — <code>ex1/data_stream.py</code></div>
+  <h2>Route a mixed stream — polymorphism in action</h2>
+  <p>Now you reuse Ex 0 and add a coordinator: <code>DataStream</code>. It holds a list of registered processors and, for each element in an incoming mixed list, finds the one processor that can handle it.</p>
+
+  <h3>Three methods to implement on <code>DataStream</code></h3>
+  <table>
+    <tr><th>Method</th><th>Job</th></tr>
+    <tr><td><code>register_processor(self, proc: DataProcessor) -&gt; None</code></td><td>Add a processor to the internal list. Note the parameter is typed as the <strong>base</strong> class — that's polymorphism enabling you to register any subclass.</td></tr>
+    <tr><td><code>process_stream(self, stream: list[Any]) -&gt; None</code></td><td>For each element, ask the registered processors (via <code>validate</code>) which one accepts it, then <code>ingest</code> it there. If none accepts it, print an error and move on — don't crash.</td></tr>
+    <tr><td><code>print_processors_stats(self) -&gt; None</code></td><td>Print, per processor, total items ever processed and how many remain stored.</td></tr>
+  </table>
+
+  <h3>The routing logic, in plain English</h3>
+  <div class="flow">
+    <span class="node">take element</span><span class="arr">►</span>
+    <span class="node">ask each processor: validate?</span><span class="arr">►</span>
+    <span class="node" style="color:var(--green)">first yes → ingest there</span>
+    <span class="arr">/</span>
+    <span class="node" style="color:var(--red)">all no → print error, continue</span>
+  </div>
+  <p>Look carefully at the example: with <strong>only</strong> the numeric processor registered, the strings, the list of dicts, and the list of strings all produce <code>DataStream error - Can't process element…</code>, while the numbers go through. After registering the other two and resending the <em>same</em> batch, everything is accepted. This is the whole lesson made visible: the <em>same</em> stream code behaves differently purely based on which processors exist — it never changed.</p>
+
+  <div class="callout warn"><span class="lbl">Read the counters carefully</span>The flat list <code>[3.14, -1, 2.71]</code> counts as <strong>3</strong> numeric items (the processor flattens lists into individual stored items), which is why "total 4 items processed" appears after a batch containing one list-of-3 plus one lone <code>42</code>. Your <code>ingest</code> must expand list inputs into individual stored entries. Trace every number in the example by hand until the counts match — that's how you confirm your model is right.</div>
+
+  <div class="callout q"><span class="lbl">Question (the subject asks this directly)</span>Why can <code>process_stream</code> work without knowing any concrete processor type, and what are the benefits? Answer in your own words; see §05 for the shape of a strong response. Be ready to also say what would change if you added, say, a <code>BinaryProcessor</code> — answer: only a new class + one <code>register_processor</code> call; the stream code is untouched.</div>
+</section>
+
+<!-- EX2 -->
+<section id="ex2">
+  <div class="eyebrow">11 · Exercise 2 — <code>ex2/data_pipeline.py</code></div>
+  <h2>Add the output side — a plug-in port via duck typing</h2>
+  <p>The input half (processors + routing) is done. Now you build the <em>output</em> half: a pluggable export system. Instead of an ABC family tree, this uses a <code>Protocol</code> (§07) so unrelated export classes can dock just by matching a method shape.</p>
+
+  <h3>What to implement</h3>
+  <table>
+    <tr><th>Piece</th><th>Detail</th></tr>
+    <tr><td><code>ExportPlugin</code></td><td>A class inheriting <code>Protocol</code>. Defines one required method: <code>process_output(self, data: list[tuple[int, str]]) -&gt; None</code>. Note the parameter type <em>exactly matches</em> a list of what <code>DataProcessor.output</code> returns.</td></tr>
+    <tr><td><code>output_pipeline(self, nb: int, plugin: ExportPlugin) -&gt; None</code></td><td>New method on <code>DataStream</code>. After processing, it consumes <code>nb</code> items from <strong>every</strong> registered processor (using their <code>output</code>) and hands them to the plugin's <code>process_output</code>.</td></tr>
+    <tr><td>CSV plugin &amp; JSON plugin</td><td>Two classes that each <em>fit the mould</em> (have <code>process_output</code>). They build valid CSV / JSON strings <strong>by hand</strong> — no <code>csv</code>/<code>json</code> import allowed.</td></tr>
+  </table>
+
+  <h3>What the example output is telling you</h3>
+  <p>For CSV, the values from a batch are joined on one comma-separated line per processor (<code>3.14,-1,2.71</code>). For JSON, each consumed item becomes a key/value pair keyed by its rank (<code>{"item_3": "42", "item_4": "21", …}</code>). The <code>int</code> half of each tuple is the rank that becomes the JSON key; the <code>str</code> half is the value. Study how the JSON keys continue climbing across batches — that confirms rank is a lifetime counter, not a per-batch reset, and ties back to the decision you made in §09.</p>
+
+  <div class="callout key"><span class="lbl">The conceptual payoff</span>The same <code>output_pipeline</code> works with the CSV plugin or the JSON plugin without a single change, because it depends only on the <code>process_output</code> shape — not on which class provides it. Input side = ABC polymorphism; output side = Protocol duck typing. You've now demonstrated both ways to "depend on an interface, not a type."</div>
+  <div class="callout warn"><span class="lbl">Hand-rolling the formats</span>Think about edge cases the libraries would normally handle: what if a value contains a comma (CSV) or a quote/backslash (JSON)? You may not need to solve every case for this subject, but being able to <em>discuss</em> them at the defense shows you understand why those libraries exist.</div>
+</section>
+
+<!-- DEFENSE -->
+<section id="defense">
+  <div class="eyebrow">12 · Defense</div>
+  <h2>What you'll be asked — prepare real answers</h2>
+  <p>Chapter VII says you may be asked to explain polymorphism, demonstrate overriding, extend the system with a new data type, or modify behaviour live. Rehearse these out loud with a peer:</p>
+  <ol class="qlist">
+    <li>Explain polymorphism using <em>your</em> <code>DataStream</code>. Point to the exact line where one variable holds different concrete types.<span class="hint">Hint: the loop in <code>process_stream</code> that calls <code>validate</code>/<code>ingest</code> on base-typed processors.</span></li>
+    <li>Why does <code>validate</code> keep the same signature in subclasses while <code>ingest</code> narrows? Why the mypy warning?<span class="hint">Hint: validate must accept Any to judge it; narrowing ingest's parameter violates Liskov substitution — §06.</span></li>
+    <li>Add a new data type (e.g. a boolean or date processor) right now.<span class="hint">Hint: one new subclass overriding validate/ingest + one register call. Nothing else changes — prove it.</span></li>
+    <li>What's the difference between your ABC (<code>DataProcessor</code>) and your Protocol (<code>ExportPlugin</code>), and why use each?<span class="hint">Hint: nominal vs structural typing; family with shared reuse vs plug-in port — §07.</span></li>
+    <li>Where do exceptions protect the pipeline, and where do you handle them gracefully instead?<span class="hint">Hint: raise on unvalidated bad ingest; catch/skip-with-message on an unroutable stream element.</span></li>
+    <li>Why was <code>output</code> written in the base class and never overridden?<span class="hint">Hint: identical behaviour for all processors → code reuse through inheritance.</span></li>
+  </ol>
+  <div class="callout tip"><span class="lbl">Final move</span>Re-implement each exercise once from a blank file without looking. The gap between "I read it" and "I can produce it" is exactly the gap the defense measures — and it's where peer review pays off most.</div>
+</section>
+
+<footer>
+  Code Nexus · Field Guide v3.0 — built to explain, not to solve. Imports authorised: abc, typing. Files: ex0/data_processor.py · ex1/data_stream.py · ex2/data_pipeline.py
+</footer>
+
+</main>
+</div>
+</body>
+</html>
