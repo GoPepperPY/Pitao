@@ -9,6 +9,7 @@ class Plant:
     def print_info(self) -> None:
         print(f"Created: {self.name}: {self.cm} cm, {self.age} days old")
 
+
 def main() -> None:
     plants: list[Plant] = [
         Plant("Sunflower", 30, 10),
@@ -21,6 +22,7 @@ def main() -> None:
     print("=== Plant Factory ===")
     for plant in plants:
         plant.print_info()
+
 
 if __name__ == "__main__":
     main()
