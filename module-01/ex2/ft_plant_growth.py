@@ -20,22 +20,14 @@ class Plant:
 
 def main() -> None:
     plant1 = Plant("Sunflower", 25.9, 35)
-    plant2 = Plant("Rose", 23.5, 56)
-    plants: list = [plant1, plant2]
-    count: float = 0
-    initial = {plant.name: plant.cm for plant in plants}
+    count = plant1.cm
+    plant1.print_info()
     for days in range(1, 8):
         print(f"===Days {days}===")
-        for plant in plants:
-            plant.print_info()
-            plant.grow()
-            plant.age()
-            count += .2
-        print("\n")
-    print(f"\nGrowth this week: {round(count, 1)}")
-    for plant in plants:
-        growth = round(plant.cm - initial[plant.name], 1)
-        print(f" 	{plant.name}: +{growth} cm")
+        plant1.print_info()
+        plant1.grow()
+        plant1.age()
+    print(f"\nGrowth this week: {round(plant1.cm - count, 1)}cm")
 
 
 if __name__ == "__main__":

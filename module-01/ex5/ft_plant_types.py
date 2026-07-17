@@ -81,24 +81,24 @@ def main() -> None:
     ]
 
     """<------ Flowers ------>"""
-    for plant in flower_data:
-        plant.show()
-        plant.bloom()
-        plant.show()
+    for flower in flower_data:
+        flower.show()
+        flower.bloom()
+        flower.show()
         print("\n")
 
     """<------ Trees ------>"""
-    for plant in tree_data:
-        plant.produce_shade()
-        plant.show()
+    for tree in tree_data:
+        tree.produce_shade()
+        tree.show()
 
     """<------ Vegetable ------>"""
-    for plant in vegetable_data:
-        plant.show()
-        for x in range(1, 21):
-            plant.grow()
-            plant.age()
-        plant.show()
+    for vegetable in vegetable_data:
+        vegetable.show()
+        for _ in range(1, 21):
+            vegetable.grow()
+            vegetable.age()
+        vegetable.show()
         print("\n")
 
 

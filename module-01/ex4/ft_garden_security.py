@@ -1,52 +1,71 @@
 #!/usr/bin/env python3
 
 class Plant:
-    def __init__(self, name: str, cm: int, age: int) -> None:
-        self.name: str = name
-        self.cm: int = 0
-        self.age: int = 0
-        self.set_age(age)
-        self.set_height(cm)
+    def __init__(self, name: str, cm: float, age: int) -> None:
+        self._name: str = name
+        self._cm: float = 0
 
-    def set_height(self, heigth) -> None:
-        if heigth > 0:
-            self.cm = heigth
-            print(f"Height updated: {self.cm}")
+        if cm < 0:
+            self._cm = 0
+            print(f"{self._name}: Error, height can't be negative")
         else:
-            print(f"{self.name}: Error, height can't be negative")
+            self._cm = cm
+
+        if age < 0:
+            self._age = 0
+            print(f"{self._name}: Error, Age can't be negative")
+        else:
+            self._age = age
+
+    def set_height(self, heigth: float) -> None:
+        if heigth >= 0:
+            self._cm = heigth
+            print(f"Height updated: {self._cm}")
+        else:
+            print(f"{self._name}: Error, height can't be negative")
             print("Height update rejected!")
 
-    def set_age(self, age) -> None:
-        if age > 0:
-            self.age = age
-            print(f"Age updated: {self.age}")
+    def set_age(self, age: int) -> None:
+        if age >= 0:
+            self._age = age
+            print(f"Age updated: {self._age}")
         else:
-            print(f"{self.name}: Error, Age can't be negative")
+            print(f"{self._name}: Error, Age can't be negative")
             print("Age update rejected!")
 
-    def get_height(self) -> int:
-        return self.cm
+    def get_height(self) -> float:
+        return self._cm
 
     def get_age(self) -> int:
-        return self.age
+        return self._age
 
     def get_info(self) -> None:
-        print(f"Current plant: {self.name}"
-              f" ({self.get_height()} cm, {self.get_age()} days)")
+        print(f"{self._name}: {round(self.get_height(), 1)} "
+              f"cm, {self.get_age()} days")
 
 
 def main() -> None:
-    plants: list[tuple[str, int, int]] = [
-        ('Rose',		25, 37),
-        ('Sunflower',	-25, 37),
-        ('Oak',			25, 37),
-        ('Cactus',		25, -37),
-        ('Fern',		25, 37),
-    ]
-    plants_info: list[Plant] = [Plant(name, height, age)
-                                for name, height, age in plants]
-    for plant in plants_info:
-        plant.get_info()
+    print("=== Garden Security System ===")
+
+    plant = Plant("rose", 15, 10)
+
+    print("Plant created: ", end="")
+    plant.get_info()
+
+    print()
+
+    plant.set_height(25.0)
+    plant.set_age(30)
+
+    print()
+
+    plant.set_height(-1)
+    plant.set_age(-1)
+
+    print()
+
+    print("Current state: ", end="")
+    plant.get_info()
 
 
 if __name__ == "__main__":
