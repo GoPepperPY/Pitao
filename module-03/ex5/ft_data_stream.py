@@ -14,8 +14,7 @@ def gen_event() -> typing.Generator:
     ]
     pool_event = [
         'Sleep', 'Climb', 'Cook', 'Eat',
-        'Love', 'Swim', 'Drawn', 'Drink', 'Jerk Off',
-        'Fly'
+        'Love', 'Swim', 'Drawn', 'Drink', 'Fly'
     ]
     while True:
         yield (random.choice(pool_names), random.choice(pool_event))

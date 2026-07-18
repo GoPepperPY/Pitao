@@ -4,6 +4,9 @@ import sys
 
 
 def main() -> None:
+    if len(sys.argv) == 1:
+        print("No valid items provided!")
+        return
     inventory: dict = {}
     for arg in sys.argv[1:]:
         if ":" not in arg:
@@ -25,9 +28,6 @@ def main() -> None:
             continue
         inventory.update({name: quantity})
 
-    if len(inventory) == 0:
-        print("No valid items provided!")
-        return
     print(f"Got inventory: {inventory}")
     print(f"Item list: {list(inventory.keys())}")
     print(f"Total quantity of the {len(inventory.keys())} items:"

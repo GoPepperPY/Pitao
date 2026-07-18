@@ -16,10 +16,10 @@ def gen_player_achievements() -> set[str]:
 
 
 def main() -> None:
-    Alice: str = gen_player_achievements()
-    Bob: str = gen_player_achievements()
-    Charlie: str = gen_player_achievements()
-    Dylan: str = gen_player_achievements()
+    Alice = gen_player_achievements()
+    Bob = gen_player_achievements()
+    Charlie = gen_player_achievements()
+    Dylan = gen_player_achievements()
 
     print(f"Player Alice: {Alice}")
     print(f"Player Bob: {Bob}")
@@ -29,11 +29,10 @@ def main() -> None:
     print(f"All distinct achievements: "
           f"{Alice.union(Bob).union(Charlie).union(Dylan)}")
 
-    res = {Alice.intersection(Bob).intersection(Charlie).intersection(Dylan)}
-    print(f"Common achievement: "
-          f"{res}")
-
+    res = Alice.intersection(Bob).intersection(Charlie).intersection(Dylan)
+    print(f"Common achievement: {res}")
     print(f"Only Alice has: "
+
           f"{Alice.difference(Bob.union(Charlie).union(Dylan))}")
     print(f"Only Bob has: {Bob.difference(Alice.union(Charlie).union(Dylan))}")
     print(f"Only Charlie has: "
